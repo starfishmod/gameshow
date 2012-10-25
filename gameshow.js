@@ -27,21 +27,69 @@ function updateStatus() {
 		}
     }
 }
-
-
-
-
 window.webkitRequestAnimationFrame(updateStatus);
 
+///------------------ End Click Handling --------------------------
+var teams = {
+	a: {
+		name: "Team A",
+		score: 0,
+		button: 0,
+		},
+	b: {
+		name: "Team b",
+		score: 0,
+		button: 5,
+		}
+	};
+
+var stages = {
+  
+};
+	
+var button=[];
+button[0]='a';
+button[5]='b';
+
+	
+calloutQs = function(){
+	$(window).on('buzzclick.callout',function(event){
+		console.log(event.originalEvent.detail);
+		var evDetail = event.originalEvent.detail;
+		if(evDetail.button%5!=0)return;
+		
+		$(window).off('buzzclick.callout');
+		$(window).on('mousedown.callout', function(event){
+          event.preventDefault();
+          event.stopPropagation();
+			$(window).off('mousedown.callout');
+			if (event.which===1){
+				//Correct
+				teams[button[evDetail.button]].score++;
+			}else if (event.which===3){
+				//inCorrect
+				teams[button[evDetail.button]].score--;
+			}else if (event.which===2){
+				//end it
+				return;
+			}
+			console.log(JSON.stringify(teams));
+			calloutQs();
+		});
+		
+	});
+}	
+
 $(document).ready(function(){
-	$(".slide").presentation({
+	/*$(".slide").presentation({
 		'screenArrows':false,
 		'slideClick':false,
 		'tableContents':true
-	});
+	});*/
 	
 	//obj.addEventListener("cat", function(e) { process(e.detail) })
-	$(window).on('buzzclick',function(event){
+	/*$(window).on('buzzclick',function(event){
 		console.log(event.originalEvent.detail);
-	});
+	});*/
+	calloutQs();
 });
